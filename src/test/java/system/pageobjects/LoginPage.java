@@ -1,5 +1,6 @@
 package system.pageobjects;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -23,27 +24,19 @@ public class LoginPage {
         this.driver = driver;
     }
 
-    public WebElement getUserNameField() {
-        return userNameField;
+    public LoginPage setUserNameField(String userName) {
+        userNameField.clear();
+        userNameField.sendKeys(userName);
+        return this;
     }
 
-    public void setUserNameField(WebElement userNameField) {
-        this.userNameField = userNameField;
+    public LoginPage setPasswordField(String password) {
+        passwordField.clear();
+        passwordField.sendKeys(password);
+        return this;
     }
 
-    public WebElement getPasswordField() {
-        return passwordField;
-    }
-
-    public void setPasswordField(WebElement passwordField) {
-        this.passwordField = passwordField;
-    }
-
-    public WebElement getSubmitButton() {
-        return submitButton;
-    }
-
-    public void setSubmitButton(WebElement submitButton) {
-        this.submitButton = submitButton;
+    public void clickSubmitButton() {
+        submitButton.click();
     }
 }
