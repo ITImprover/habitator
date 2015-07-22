@@ -2,6 +2,7 @@ package ru.agilecamp.habitator;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ public class FrontController extends HttpServlet {
     public static final String LOGINJSP = "login.jsp";
     public static final String REGISTRATION_FORMJSP = "registration_form.jsp";
     public static final String MY_HABITSJSP = "my_habits.jsp";
+    private static final String USERS_BY_HABIT_JSP = "potent_friends.jsp";
     @Resource(name = "jdbc/TestDB")
     private DataSource dataSource;
     private UserService userService;
@@ -52,6 +54,8 @@ public class FrontController extends HttpServlet {
                 addHabit(request, response);
             } else if ("drop_account".equals(action)) {
                 dropUser(request, response);
+            } else if ("find_users_by_habit".equals(action)) {
+                userListByHabit(request, response);
             } else {
                 redirectTo(request, response, INDEXJSP);
             }
@@ -144,6 +148,19 @@ public class FrontController extends HttpServlet {
             Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, e);
             throw new ServletException(e);
         }
+    }
+
+    private void userListByHabit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String habitName = request.getParameter("habit");
+            List<User> potentialFriends = habitsService.getUsersByHabitName(habitName);
+            request.setAttribute("habitName", habitName);
+            request.setAttribute("data", potentialFriends);
+        } catch (SQLException e) {
+            Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, e);
+            throw new ServletException(e);
+        }
+        request.getRequestDispatcher(USERS_BY_HABIT_JSP).forward(request, response);
     }
 
     private Integer getCurrentUserId(HttpServletRequest request) {
